@@ -34,28 +34,28 @@ const Home = () => {
 	}
 	
 	return (
-		<div className="text-center">
+		<div className="text-center container">
 			<h1 className="text-center mt-5">
 				Todo List Usando React + Fetch
 			</h1>
 
-			<div>
+			<div className="d-flex justify-content-center">
 			    <input type="text" value={nuevoToDo} onChange={handleChange}/>
-			    <button className="btn" onClick={handleClick}>
+			    <button className="btn btn-success ms-3" onClick={handleClick}>
 			    	Agregar tarea
 		    	</button>
 			</div>	
-			<p>Nueva tarea: {nuevoToDo}</p>
-			<ul>
+			<div className="d-flex justify-content-center mt-4">
+			<ul className="list-group">
 				{toDo.map((listaTareas, index) =>{
 					return(
-						<li key={index}>
-							{listaTareas} <button className="btn" onClick={() => borrarToDo(index)}><i className="fa-regular fa-circle-xmark"></i></button>
+						<li className="list-group-item" key={index}>
+							{listaTareas} <button className="btn btn-danger btn-sm" onClick={() => borrarToDo(index)}><i className="fa-regular fa-circle-xmark"></i></button>
 						</li>
 					) 
 				})}
 			</ul>
-
+            </div>
 		</div>
 	);
 };
