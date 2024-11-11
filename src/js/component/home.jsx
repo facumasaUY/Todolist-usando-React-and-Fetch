@@ -1,25 +1,28 @@
-import React, {useState} from "react";
-
-//include images into your bundle
-import rigoImage from "../../img/rigo-baby.jpg";
+import React, {useEffect, useState} from "react";
 
 //create your first component
-
-
 
 const Home = () => {
 
 	// let nuevoToDo = "";
    // variable, funcion para modificar variable
-	const [nuevoToDo, setNuevoToDo] = useState("");
-	const [toDo, setTodo] = useState(["Estudiar para el proyecto de 4geeks", "Terminar los ejercios con Fetch"])
+    const initialToDo = {
+		label:"",
+		is_done: false,
+	}
+
+	const urlBase = "https://playground.4geeks.com/todo"
+
+	const [nuevoToDo, setNuevoToDo] = useState(initialToDo);
+
+	const [toDo, setTodo] = useState([])
 
 	const handleClick = () => {
-		if (nuevoToDo.trim() === ""){
+		if (nuevoToDo.label.trim() === ""){
 			return window.alert("NO PUEDE AÑADIR UNA TAREA VACÍA. DEBE ESCRIBIR UNA NUEVA TAREA.")
 		} 
 			setTodo([...toDo,nuevoToDo])
-			setNuevoToDo("")
+			setNuevoToDo(initialToDo)
 		}
        
 
@@ -30,8 +33,25 @@ const Home = () => {
 		}
 
 	const handleChange = (event) => {
-		setNuevoToDo(event.target.value);
+		setNuevoToDo({
+			...nuevoToDo,
+			[event.target.name]: event.target.value
+		});
 	}
+
+	const gotAllToDo = async() =>{
+		try {
+			const res = await fetch(`${urlBase}/users/facundo`)
+			const data = await res.json()
+			setTodo(data.todos)
+		} catch (error) {
+			console.log(error)
+		}
+	} 
+
+	useEffect(()=>{
+		gotAllToDo();
+	}, [])
 	
 	return (
 		<div className="text-center container">
@@ -40,7 +60,7 @@ const Home = () => {
 			</h1>
 
 			<div className="d-flex justify-content-center">
-			    <input type="text" value={nuevoToDo} onChange={handleChange}/>
+			    <input type="text" value={nuevoToDo.label} onChange={handleChange} name="label"/>
 			    <button className="btn btn-success ms-3" onClick={handleClick}>
 			    	Agregar tarea
 		    	</button>
@@ -50,7 +70,7 @@ const Home = () => {
 				{toDo.map((listaTareas, index) =>{
 					return(
 						<li className="list-group-item" key={index}>
-							{listaTareas} <button className="btn btn-danger btn-sm" onClick={() => borrarToDo(index)}><i className="fa-regular fa-circle-xmark"></i></button>
+							{listaTareas.label} <button className="btn btn-danger btn-sm" onClick={() => borrarToDo(index)}><i className="fa-regular fa-circle-xmark"></i></button>
 						</li>
 					) 
 				})}
